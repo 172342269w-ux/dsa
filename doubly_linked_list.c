@@ -37,11 +37,31 @@ void traverseList(Node* head) {
     printf("\n");
 
 }
+//尾插法
+//先获取尾节点
+Node*getTail(Node*head){
+    Node*current=head;
+    while(current->next!=NULL){
+        current=current->next;
+    }
+    return current;
+}
+void insertAtTail(Node* head,ElementType e){
+    Node* newnode=(Node*)malloc(sizeof(Node));
+    newnode->data=e;
+    newnode->next=NULL;
+    Node* tail=getTail(head);
+    tail->next=newnode;
+    newnode->prev=tail;
+}
 int main(){
     Node*list=initList();
     insertAtHead(list,10);
     insertAtHead(list,20); 
     insertAtHead(list,30);
+    traverseList(list);
+    insertAtTail(list,40);
+    insertAtTail(list,50);
     traverseList(list);
     return 0;
 }
