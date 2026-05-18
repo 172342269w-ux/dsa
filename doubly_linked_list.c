@@ -1,13 +1,5 @@
 // 双向链表
 #include "doubly_linked_list.h"
-#include <stdio.h>
-#include <stdlib.h>
-typedef int ElementType;
-typedef struct Node {
-    ElementType data;
-    struct Node* prev;
-    struct Node* next;
-} Node;
 //初始化链表
 Node* initList() {
     Node* head = (Node*)malloc(sizeof(Node));
@@ -54,6 +46,40 @@ void insertAtTail(Node* head,ElementType e){
     tail->next=newnode;
     newnode->prev=tail;
 }
+//指定位置插入
+void insertAtPosition(Node* head,ElementType e,int position){
+    Node* newnode=(Node*)malloc(sizeof(Node));
+    newnode->data=e;
+    Node* current=head;
+    int index=0;
+    while(current!=NULL&&index<position-1){
+        current=current->next;
+        index++;
+    }
+    if(current!=NULL){
+        newnode->next=current->next;
+        newnode->prev=current;
+        if(current->next!=NULL){
+            current->next->prev=newnode;
+        }
+        current->next=newnode;
+    }
+}
+//删除节点
+void deleteNode(Node* head, ElementType e) {
+    Node* current = head->next;
+    while (current != NULL) {
+        Node* next = current->next; // 提前保存，防止 free 后访问野指针
+        if (current->data == e) {
+            current->prev->next = current->next;
+            if (current->next != NULL) {
+                current->next->prev = current->prev;
+            }
+            free(current);
+        }
+        current = next;
+    }
+}
 int main(){
     Node*list=initList();
     insertAtHead(list,10);
@@ -63,5 +89,10 @@ int main(){
     insertAtTail(list,40);
     insertAtTail(list,50);
     traverseList(list);
+    insertAtPosition(list,60,3);
+    traverseList(list);
+    deleteNode(list, 20);
+    traverseList(list);
+    free(list);
     return 0;
 }
